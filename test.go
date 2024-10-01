@@ -9,11 +9,16 @@ import (
 	"firebase.google.com/go/messaging"
 	"github.com/yefriddavid/pushNotification/config"
 	//"pushNotification/config"
+    //"context"
+    "path/filepath"
+    "google.golang.org/api/option"
+
 )
 
 func main() {
 
-	app, _, _ := config.SetupFirebase()
+	//app, _, _ := config.SetupFirebase()
+	app, _, _ := SetupFirebase()
 	sendToToken(app)
 	}
 
@@ -31,7 +36,7 @@ func sendToToken(app *firebase.App) {
 	message := &messaging.Message{
 		Notification: &messaging.Notification{
 			Title: "Notification Test",
-			Body:  "Hello React!!",
+			Body:  "Perro hp!!",
 		},
 		Token: registrationToken,
 	}
@@ -44,3 +49,39 @@ func sendToToken(app *firebase.App) {
 }
 
 
+
+
+
+
+//
+
+func SetupFirebase() (*firebase.App, context.Context, *messaging.Client) {
+
+    ctx := context.Background()
+
+    //serviceAccountKeyFilePath, err := filepath.Abs("./serviceAccountKey.json")
+    // serviceAccountKeyFilePath, err := filepath.Abs("./google-services.json")
+    serviceAccountKeyFilePath, err := filepath.Abs("./notificationsapp-25689-firebase-adminsdk-c2a6h-a861f1eeca.json")
+
+    if err != nil {
+        panic("Unable to load serviceAccountKeys.json file")
+    }
+
+    opt := option.WithCredentialsFile(serviceAccountKeyFilePath)
+fmt.Println("test")
+
+    //Firebase admin SDK initialization
+    app, err := firebase.NewApp(context.Background(), nil, opt)
+    if err != nil {
+        panic("Firebase load error")
+    }
+
+    //Messaging client
+    client, e := app.Messaging(ctx)
+
+fmt.Println(serviceAccountKeyFilePath)
+fmt.Println(e)
+fmt.Println("test3")
+
+    return app, ctx, client
+}
