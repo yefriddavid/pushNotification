@@ -1,4 +1,4 @@
-module yefriddavid/pushNotification
+module pushNotification
 
 go 1.20
 
